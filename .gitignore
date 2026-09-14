@@ -1,0 +1,4 @@
+.netlify/
+*.txt
+Thumbs.db
+.DS_Store
