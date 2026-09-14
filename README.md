@@ -9,3 +9,7 @@
 ไฟล์
 - `index.html` — ตัวเครื่องมือ (เปิดได้เลย ไม่ต้อง build)
 - `logo-pui.png` — โลโก้ต้นฉบับ (แนบในแชทตอนสั่งสร้างภาพ)
+
+## เว็บ
+- Live: https://ppui-wannaknow-10pic.netlify.app
+- Auto-deploy: push ขึ้น `main` แล้ว Netlify จะ build ให้อัตโนมัติ
