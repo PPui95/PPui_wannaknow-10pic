@@ -88,6 +88,16 @@ body{font-family:'Sarabun',sans-serif}
 </select>
 </div>
 </div>
+<div class="grid md:grid-cols-4 gap-3 text-sm mt-3">
+<div>
+<label class="text-xs font-bold" style="color:#5D1A2D">จำนวน Hashtag</label>
+<input id="tagCount" type="number" value="5" min="0" max="15" class="w-full mt-1 px-4 py-2 rounded-2xl border-2 border-gray-200">
+</div>
+<div class="md:col-span-3">
+<label class="text-xs font-bold" style="color:#5D1A2D">Hashtag ที่ต้องมีเสมอ (คั่นด้วยเว้นวรรค — ที่เหลือให้ AI คิดตามเนื้อหา)</label>
+<input id="tagFixed" type="text" value="#พี่ปุ๋ยอยากรู้" class="w-full mt-1 px-4 py-2 rounded-2xl border-2 border-gray-200">
+</div>
+</div>
 </div>
 
 <!-- STEP 3: COLORS -->
@@ -358,6 +368,7 @@ const postLen=+v('postLen')||2000;
 const emojiPct=+v('emojiPct')||1;
 const emojiCount=Math.max(1,Math.round(postLen*emojiPct/100));
 const tone=v('tone'); const cta=v('cta');
+const tagCount=+v('tagCount')||0; const tagFixed=v('tagFixed');
 const lc=logoCfg();
 document.getElementById('emojiHint').innerText=`≈ ${emojiCount} อิโมจิ จาก ${postLen} ตัวอักษร`;
 
@@ -397,6 +408,7 @@ const prompt=`สวัสดีค่ะ ช่อง "พี่ปุ๋ยอ
   🎥 ที่มา: "${vtitle}" โดย ${guru}
   📌 ช่อง: ${channel}
   🔗 ${yt}
+- Hashtag: ${tagCount} อัน วางบรรทัดสุดท้ายหลัง Credit${tagFixed?` ต้องมี ${tagFixed} เสมอ ที่เหลือคิดจากเนื้อหาคลิป`:' คิดจากเนื้อหาคลิป'} (ภาษาไทยหรืออังกฤษที่คนค้นหาจริง ไม่ซ้ำกัน ไม่นับรวมในความยาวโพสต์)
 - นับจำนวนตัวอักษรและอิโมจิให้ดูท้ายโพสต์
 
 ━━━━━━━━━━━━━━━━━━━━━━
@@ -437,7 +449,7 @@ ${colorBlock}
 ━━━━━━━━━━━━━━━━━━━━━━
 - สะกดไทยถูก 100%: ใช้ (ไม่ใช่ ใซ้) / ชีวิต (ไม่ใช่ ซีวิต) / เช้า (ไม่ใช่ เซ้า) / ชาเลนจ์ (ไม่ใช่ ซาเลนซ์)
 - ภาพ 1 มีรูปเจ้าของ VDO ✔ / ภาพ 10 มีประวัติเจ้าของ VDO (ไม่มีคำว่า Guru) ✔ / ไม่มีลิงก์ในภาพใดเลย ✔ / โลโก้ครบ 10 ภาพ ✔ / โทนสีเดียวกันทั้งชุด ✔
-- สรุปปิดท้าย: ชุดสีที่ใช้ (Hex) + จำนวนตัวอักษรโพสต์ + จำนวนอิโมจิ
+- สรุปปิดท้าย: ชุดสีที่ใช้ (Hex) + จำนวนตัวอักษรโพสต์ + จำนวนอิโมจิ + จำนวน Hashtag
 
 เริ่มจากส่วนที่ 1 และ 2 ก่อนนะคะ แล้วรอพี่ยืนยันก่อนสร้างภาพค่ะ
 `;
@@ -473,7 +485,7 @@ URL.revokeObjectURL(url);
 }
 
 // ===== EVENTS =====
-['yt','guru','channel','vtitle','points','bio','postLen','emojiPct','tone','cta','logoPos'].forEach(id=>{
+['yt','guru','channel','vtitle','points','bio','postLen','emojiPct','tone','cta','tagCount','tagFixed','logoPos'].forEach(id=>{
 document.getElementById(id).addEventListener('input', updatePrompt);
 document.getElementById(id).addEventListener('change', updatePrompt);
 });
