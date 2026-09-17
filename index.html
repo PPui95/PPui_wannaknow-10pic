@@ -18,14 +18,48 @@ body{font-family:'Sarabun',sans-serif}
 <div class="bg-white rounded-3xl p-5 border-2 mb-4 flex flex-wrap gap-3 justify-between items-center" style="border-color:#5D1A2D">
 <div>
 <h1 class="text-xl font-bold" style="color:#5D1A2D">พี่ปุ๋ยอยากรู้ - VDO → Post 2,000 ตัวอักษร + 10 Infographic (1:1)</h1>
-<p class="text-xs opacity-60">ใส่ลิงก์ → เลือกโทนสี → จัด 10 ภาพ (ภาพ 1 = ปก+รูปเจ้าของ VDO / ภาพ 10 = ประวัติเจ้าของ VDO) → Copy คำสั่งไปวางในแชทใหม่</p>
+<p class="text-xs opacity-60">วางลิงก์ YouTube <b>หรือ</b> วางเรื่อง/เนื้อหาที่สนใจ → เลือกโทนสี+สไตล์ → จัด 10 ภาพ → Copy คำสั่งไปวางในแชทใหม่</p>
 </div>
 <div class="text-xs px-3 py-1 rounded-full" style="background:#FFF5F6; border:1px solid #5D1A2D; color:#5D1A2D">V4 • Logo ล่างขวา จาง 30%</div>
 </div>
 
 <!-- STEP 1: INPUT -->
 <div class="bg-white rounded-3xl p-5 shadow-sm mb-4 border-2 border-dashed" style="border-color:#5D1A2D">
-<h2 class="font-bold mb-3" style="color:#5D1A2D">1️⃣ ข้อมูล VDO และเจ้าของ VDO (ใช้ทำ Credit + ภาพ 1 + ภาพ 10)</h2>
+<div class="flex flex-wrap gap-2 justify-between items-center mb-3">
+<h2 class="font-bold" style="color:#5D1A2D">1️⃣ แหล่งที่มาของเนื้อหา</h2>
+<div class="flex gap-1 p-1 rounded-full" style="background:#FFF5F6;border:1px solid #5D1A2D33">
+<button id="srcBtn-yt" onclick="setSource('yt')" class="text-xs px-4 py-1.5 rounded-full font-bold">📺 ลิงก์ YouTube</button>
+<button id="srcBtn-topic" onclick="setSource('topic')" class="text-xs px-4 py-1.5 rounded-full font-bold">📝 เรื่อง / เนื้อหาที่สนใจ</button>
+</div>
+</div>
+
+<!-- โหมดเรื่อง/เนื้อหา -->
+<div id="panel-topic" class="hidden">
+<div class="grid md:grid-cols-3 gap-3">
+<div class="md:col-span-2">
+<label class="text-xs font-bold" style="color:#5D1A2D">หัวข้อเรื่อง *</label>
+<input id="topicTitle" type="text" placeholder="เช่น 5 นิสัยตอนเช้าของคนที่ประสบความสำเร็จ" class="w-full mt-1 px-4 py-3 rounded-2xl border-2 text-sm" style="border-color:#5D1A2D; background:#FFF5F6">
+</div>
+<div>
+<label class="text-xs font-bold" style="color:#5D1A2D">ผู้เชี่ยวชาญ / เจ้าของแนวคิด (ถ้ามี)</label>
+<input id="topicOwner" type="text" placeholder="เช่น James Clear / ว่างไว้ก็ได้" class="w-full mt-1 px-4 py-3 rounded-2xl border-2 border-gray-200 text-sm">
+</div>
+</div>
+<div class="grid md:grid-cols-3 gap-3 mt-3">
+<div class="md:col-span-2">
+<label class="text-xs font-bold" style="color:#5D1A2D">วางเนื้อหา / บทความ / โน้ต / ลิงก์เว็บ (ยาวแค่ไหนก็ได้ — หรือว่างไว้ให้ AI ค้นคว้าจากหัวข้อ)</label>
+<textarea id="topicBody" placeholder="วางข้อความจากบทความ สรุปหนังสือ โพสต์ที่ชอบ หรือแค่พิมพ์สิ่งที่อยากให้ทำ เช่น 'อยากได้เรื่องการนอนหลับให้ดีขึ้นแบบมีงานวิจัยรองรับ'" class="w-full mt-1 px-4 py-3 rounded-2xl border-2 border-gray-200 text-sm h-32"></textarea>
+</div>
+<div>
+<label class="text-xs font-bold" style="color:#5D1A2D">แหล่งอ้างอิง (ถ้ามี — ใช้ทำ Credit + ภาพ 10)</label>
+<textarea id="topicRefs" placeholder="เช่น หนังสือ Atomic Habits / บทความจาก Harvard Business Review / ลิงก์เว็บ" class="w-full mt-1 px-4 py-3 rounded-2xl border-2 border-gray-200 text-sm h-32"></textarea>
+</div>
+</div>
+<p class="text-xs opacity-50 mt-2">💡 โหมดนี้ ภาพ 1 = ปกหัวข้อ (ถ้าระบุผู้เชี่ยวชาญจะใส่รูปให้) • ภาพ 10 = สรุป Key Takeaways + แหล่งอ้างอิง (หรือประวัติผู้เชี่ยวชาญถ้าระบุ)</p>
+</div>
+
+<!-- โหมด YouTube -->
+<div id="panel-yt">
 <div class="grid md:grid-cols-3 gap-3">
 <div class="md:col-span-2">
 <label class="text-xs font-bold" style="color:#5D1A2D">ลิงก์ YouTube *</label>
@@ -54,6 +88,7 @@ body{font-family:'Sarabun',sans-serif}
 <textarea id="bio" placeholder="เช่น โยคี นักพรต ผู้ก่อตั้ง Isha Foundation ประเทศอินเดีย ..." class="w-full mt-1 px-4 py-3 rounded-2xl border-2 border-gray-200 text-sm h-24"></textarea>
 </div>
 </div>
+</div><!-- /panel-yt -->
 </div>
 
 <!-- STEP 2: POST SETTINGS -->
@@ -213,20 +248,36 @@ const palettes=[
 {id:'charcoal',name:'Charcoal + Copper',bg:'#F7F6F4',accent:'#2B2B2B',text:'#B87333',border:'#B87333',desc:'ถ่านดำ + ทองแดง (มินิมอลหรู)'},
 ];
 let sel=palettes[1];
+let source='yt'; // 'yt' | 'topic'
+function setSource(m){
+source=m;
+document.getElementById('panel-yt').classList.toggle('hidden',m!=='yt');
+document.getElementById('panel-topic').classList.toggle('hidden',m!=='topic');
+['yt','topic'].forEach(k=>{const b=document.getElementById('srcBtn-'+k);const on=k===m;b.style.background=on?'#5D1A2D':'transparent';b.style.color=on?'#fff':'#5D1A2D';});
+slides[0]={...(m==='topic'?SLIDE_FIRST_TOPIC:SLIDE_FIRST),title:slides[0].title};
+slides[9]={...(m==='topic'?SLIDE_LAST_TOPIC:SLIDE_LAST),title:(m==='topic'?SLIDE_LAST_TOPIC:SLIDE_LAST).title};
+renderSlides();updatePrompt();
+}
 
 // ===== สไตล์ภาพพรีเมียม (Art Direction) =====
 const styles={
-editorial:{name:'✦ Luxury Editorial (ค่าเริ่มต้น)',desc:'นิตยสารหรู — หัวข้อ Serif ใหญ่ + เนื้อหา Sans บาง เส้นทองบาง พื้นที่ว่างเยอะ',prompt:'สไตล์นิตยสารหรู (Luxury Editorial): หัวข้อใช้ฟอนต์ Serif สมัยใหม่ตัวใหญ่ เนื้อหาใช้ Sans ตัวบาง มีเส้นขีดคั่นบางสีทองด้าน (1px) พื้นที่ว่าง 25-30% ของภาพ เลขลำดับใหญ่จางเป็น element ตกแต่ง'},
-minimal:{name:'✦ Premium Minimal',desc:'ขาวสะอาด ไม่มีลวดลาย ใช้ typography และ spacing เล่าเรื่อง',prompt:'สไตล์มินิมอลพรีเมียม: พื้นเรียบไม่มีลวดลาย องค์ประกอบน้อยแต่วางแม่นยำบน grid 12 คอลัมน์ ฟอนต์ Sans เรขาคณิต 2 น้ำหนัก (Light / Bold) ไอคอนเส้นบาง 1.5px น้ำหนักเดียวทั้งชุด ไม่มีเงา ไม่มี gradient'},
-darklux:{name:'✦ Dark Luxe',desc:'พื้นเข้ม ทองด้าน แสงนุ่ม ดูแพงแบบแบรนด์เครื่องประดับ (เหมาะกับชุดสี Midnight Navy)',prompt:'สไตล์ Dark Luxe: พื้นหลังโทนเข้มมี gradient นุ่มมาก (vignette เบาๆ) ตัวอักษรสีครีม/ทองด้าน มี glow บางๆ รอบรูปคน เส้นและกรอบทองเมทัลลิกด้าน ไม่เงาสะท้อน ไม่ vivid'},
-corporate:{name:'✦ Modern Corporate',desc:'สะอาด เชื่อถือได้ แบบบริษัทที่ปรึกษาระดับโลก',prompt:'สไตล์ Modern Corporate: การ์ดขอบมนซ้อนบนพื้น ใช้ soft shadow (blur 40px opacity 8%) จัดข้อมูลเป็นบล็อกชัดเจน หัวข้อ Bold เนื้อหา Regular สีเน้นใช้แค่จุดเดียวต่อภาพ ไอคอน line-style น้ำหนักเดียว'},
+editorial:{name:'✦ Luxury Editorial (ค่าเริ่มต้น)',desc:'นิตยสารหรู — หัวข้อ Serif ใหญ่ เนื้อหา Sans บาง เส้นทองบาง พื้นที่ว่างเยอะ',
+prompt:'Luxury Editorial แบบนิตยสารหรู: หัวข้อฟอนต์ Serif ไทยสมัยใหม่ตัวใหญ่ เนื้อหาฟอนต์ Sans ตัวบาง มีเส้นคั่นบางสีทองด้าน พื้นหลังเรียบสีพื้น พื้นที่ว่างเยอะ เลขลำดับใหญ่จางเป็นของตกแต่ง ไม่มีเงา'},
+minimal:{name:'✦ Premium Minimal',desc:'ขาวสะอาด ไม่มีลวดลาย ใช้ typography และ spacing เล่าเรื่อง',
+prompt:'Premium Minimal: พื้นหลังเรียบไม่มีลวดลาย ฟอนต์ Sans ไทยสมัยใหม่ 2 น้ำหนัก (บาง/หนา) ไอคอนเส้นบางสไตล์เดียวกัน องค์ประกอบน้อย จัดวางเป็นระเบียบ ไม่มีเงา ไม่มี gradient'},
+darklux:{name:'✦ Dark Luxe',desc:'พื้นเข้ม ทองด้าน แสงนุ่ม ดูแพงแบบแบรนด์เครื่องประดับ (คู่กับชุดสี Midnight Navy)',
+prompt:'Dark Luxe: พื้นหลังโทนเข้ม gradient นุ่ม ตัวอักษรสีครีม/ทองด้าน ฟอนต์ Sans ไทยสมัยใหม่ มี glow นุ่มๆ รอบรูปคน เส้นและกรอบทองด้าน บรรยากาศหรูสงบ'},
+corporate:{name:'✦ Modern Corporate',desc:'สะอาด เชื่อถือได้ แบบบริษัทที่ปรึกษาระดับโลก',
+prompt:'Modern Corporate: การ์ดขอบมนสีขาววางบนพื้นสีอ่อน มีเงานุ่มจางๆ ใต้การ์ด ฟอนต์ Sans ไทยสมัยใหม่ หัวข้อหนา เนื้อหาปกติ ไอคอนเส้นเดียวสไตล์เดียวกัน จัดข้อมูลเป็นบล็อกชัดเจน'},
 };
 let styleSel='editorial';
 function selectStyle(k){styleSel=k;document.getElementById('styleDesc').innerText=styles[k].desc;updatePrompt();}
 
 // ===== 2. SLIDES (fixed 10) — ภาพ 1 และ 10 ล็อก / ภาพ 2-9 มาจากแม่แบบตามประเภท VDO =====
-const SLIDE_FIRST={id:1, type:'ปก + รูปเจ้าของ VDO', title:'ชื่อเรื่องหลักจาก VDO (สั้น ทรงพลัง)', locked:true, note:'ต้องมีรูปเจ้าของ VDO เด่นชัด + ชื่อเจ้าของ VDO + ชื่อช่อง'};
-const SLIDE_LAST={id:10, type:'ประวัติ', title:'ประวัติเจ้าของ VDO + Credit ช่อง', locked:true, note:'รูปเจ้าของ VDO + ประวัติสั้น 4-5 บรรทัด + ชื่อช่อง (ห้ามมีคำว่า Guru และห้ามใส่ลิงก์ในภาพ)'};
+const SLIDE_FIRST={id:1, type:'ปก + รูปเจ้าของ VDO', title:'ชื่อเรื่องหลักจาก VDO (สั้น ทรงพลัง)', locked:true, note:'รูปเจ้าของ VDO เด่น + ชื่อเรื่อง + ชื่อช่อง'};
+const SLIDE_FIRST_TOPIC={id:1, type:'ปกหัวข้อ', title:'ชื่อเรื่อง (สั้น ทรงพลัง)', locked:true, note:'หัวข้อใหญ่ + ภาพประกอบแทนสาระ (ถ้าระบุผู้เชี่ยวชาญ ใส่รูปเขา) + ชื่อช่อง'};
+const SLIDE_LAST_TOPIC={id:10, type:'สรุป + อ้างอิง', title:'Key Takeaways + แหล่งอ้างอิง', locked:true, note:'สรุป 3 ข้อจำง่าย + ชื่อแหล่งอ้างอิง/ผู้เชี่ยวชาญ (ไม่มีลิงก์)'};
+const SLIDE_LAST={id:10, type:'ประวัติ', title:'ประวัติเจ้าของ VDO + Credit ช่อง', locked:true, note:'รูปเล็ก + ประวัติ 4-5 บรรทัด + ชื่อช่อง (ไม่มีคำว่า Guru ไม่มีลิงก์)'};
 
 // แม่แบบภาพ 2-9 (8 ภาพ) — [type, title]  ใส่ "(ถ้ามี)" = ถ้าคลิปไม่มีส่วนนี้ AI ต้องแทนด้วยประเด็นอื่นจากคลิป
 const templates={
@@ -296,7 +347,8 @@ let tpl='howto';
 
 function defaultSlides(t){
 t=t||tpl;
-return [ {...SLIDE_FIRST}, ...templates[t].mid.map(([type,title],i)=>({id:i+2,type,title,locked:false})), {...SLIDE_LAST} ];
+const first=source==='topic'?SLIDE_FIRST_TOPIC:SLIDE_FIRST, last=source==='topic'?SLIDE_LAST_TOPIC:SLIDE_LAST;
+return [ {...first}, ...templates[t].mid.map(([type,title],i)=>({id:i+2,type,title,locked:false})), {...last} ];
 }
 let slides=defaultSlides();
 function selectTemplate(t){tpl=t; slides=defaultSlides(t); renderSlides(); updatePrompt();}
@@ -343,7 +395,7 @@ const preview=document.getElementById('previewSlides');
 preview.innerHTML=slides.map((s,i)=>`
 <div class="relative aspect-square rounded-lg overflow-hidden border" style="background:${sel.bg};border-color:${sel.accent}55">
 <div class="absolute top-1 left-1 text-[8px] px-1 rounded-full font-bold" style="background:${sel.accent};color:${sel.bg}">${i+1}</div>
-${i===0||i===9?`<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full flex items-center justify-center text-[7px]" style="width:${i===0?'55%':'32%'};aspect-ratio:1;background:${sel.accent}33;border:1px dashed ${sel.accent};color:${sel.accent}">${i===0?"รูปเจ้าของ VDO":"ประวัติ"}</div>`:
+${i===0||i===9?`<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full flex items-center justify-center text-[7px]" style="width:${i===0?'55%':'32%'};aspect-ratio:1;background:${sel.accent}33;border:1px dashed ${sel.accent};color:${sel.accent}">${i===0?(source==='topic'&&!document.getElementById('topicOwner').value.trim()?'ภาพประกอบ':'รูปเจ้าของ VDO'):(source==='topic'?'สรุป+อ้างอิง':'ประวัติ')}</div>`:
 `<div class="absolute inset-x-1.5 top-5 space-y-0.5"><div class="h-1 rounded" style="background:${sel.accent};width:80%"></div><div class="h-1 rounded" style="background:${sel.accent}66;width:60%"></div><div class="h-1 rounded" style="background:${sel.accent}66;width:70%"></div></div>`}
 <img src="${LOGO_B64}" class="absolute ${lp}" style="width:${Math.max(6,lc.size*1.4)}px;aspect-ratio:1;opacity:${lc.opacity/100}">
 </div>`).join('');
@@ -376,12 +428,16 @@ renderSlides(); updatePrompt();
 // ===== PROMPT =====
 function updatePrompt(){
 const v=id=>document.getElementById(id).value.trim();
+const isTopic=source==='topic';
 const yt=v('yt')||'[วางลิงก์ YouTube]';
-const guru=v('guru')||'[ชื่อ Guru]';
-const channel=v('channel')||guru;
-const vtitle=v('vtitle')||'(ให้ดึงชื่อคลิปจากลิงก์)';
-const points=v('points')||'(ไม่ได้ระบุ - ให้สรุปประเด็นหลักจากคลิปเอง 4-6 ประเด็น)';
+const guru=isTopic?(v('topicOwner')||''):(v('guru')||'[ชื่อ Guru]');
+const channel=isTopic?'พี่ปุ๋ยอยากรู้':(v('channel')||guru);
+const vtitle=isTopic?(v('topicTitle')||'[หัวข้อเรื่อง]'):(v('vtitle')||'(ให้ดึงชื่อคลิปจากลิงก์)');
+const points=v('points')||(isTopic?'(ให้สรุปประเด็นหลักจากเนื้อหา/การค้นคว้า 4-6 ประเด็น)':'(ไม่ได้ระบุ - ให้สรุปประเด็นหลักจากคลิปเอง 4-6 ประเด็น)');
 const bio=v('bio')||'(ไม่ได้ระบุ - ให้ค้นประวัติสั้นๆ ที่ตรวจสอบได้ของ Guru มาใช้)';
+const topicBody=v('topicBody')||'(ไม่ได้วางเนื้อหา — ให้ค้นคว้าจากหัวข้อ ใช้แหล่งที่เชื่อถือได้ และบอกพี่ว่าอ้างอิงจากไหน)';
+const topicRefs=v('topicRefs')||'(ไม่ได้ระบุ — ให้ระบุแหล่งที่ใช้ค้นคว้า 2-3 แหล่งที่ตรวจสอบได้)';
+const ownerLine=guru?`ผู้เชี่ยวชาญ/เจ้าของแนวคิด: ${guru}`:'ผู้เชี่ยวชาญ/เจ้าของแนวคิด: (ไม่ระบุ — ไม่ต้องใส่รูปคนในภาพ 1 ใช้ภาพประกอบแทน)';
 const postLen=+v('postLen')||2000;
 const emojiPct=+v('emojiPct')||1;
 const emojiCount=Math.max(1,Math.round(postLen*emojiPct/100));
@@ -403,7 +459,17 @@ const prompt=`สวัสดีค่ะ ช่อง "พี่ปุ๋ยอ
 งานนี้มี 5 ส่วน ทำตามลำดับ และรอให้พี่ยืนยันแผน (ส่วนที่ 2) ก่อนเริ่มสร้างภาพ (ส่วนที่ 3)
 
 ━━━━━━━━━━━━━━━━━━━━━━
-📺 ข้อมูล VDO
+${isTopic?`📝 เรื่อง / เนื้อหาที่สนใจ
+━━━━━━━━━━━━━━━━━━━━━━
+หัวข้อ: ${vtitle}
+${ownerLine}
+เนื้อหาที่ให้มา: ${topicBody}
+แหล่งอ้างอิง: ${topicRefs}
+ประเด็นหลัก: ${points}
+
+ไฟล์ที่แนบมาในแชทนี้:
+① โลโก้ "พี่ปุ๋ยอยากรู้"  ② ตัวอย่าง Infographic (อ้างอิง Layout/สไตล์)${guru?'  ③ รูปผู้เชี่ยวชาญ (ถ้ามี)':''}`
+:`📺 ข้อมูล VDO
 ━━━━━━━━━━━━━━━━━━━━━━
 ลิงก์: ${yt}
 ชื่อคลิป: ${vtitle}
@@ -413,19 +479,22 @@ const prompt=`สวัสดีค่ะ ช่อง "พี่ปุ๋ยอ
 ประวัติ Guru: ${bio}
 
 ไฟล์ที่แนบมาในแชทนี้:
-① โลโก้ "พี่ปุ๋ยอยากรู้"  ② ตัวอย่าง Infographic (อ้างอิง Layout/สไตล์)  ③ รูปเจ้าของ VDO (ถ้าไม่มี ให้บอกพี่ก่อนทำภาพ 1)
+① โลโก้ "พี่ปุ๋ยอยากรู้"  ② ตัวอย่าง Infographic (อ้างอิง Layout/สไตล์)  ③ รูปเจ้าของ VDO (ถ้าไม่มี ให้บอกพี่ก่อนทำภาพ 1)`}
 
 ━━━━━━━━━━━━━━━━━━━━━━
-✍️ ส่วนที่ 1: เขียน Post สรุป VDO
+✍️ ส่วนที่ 1: เขียน Post ${isTopic?'เรื่อง "'+vtitle+'"':'สรุป VDO'}
 ━━━━━━━━━━━━━━━━━━━━━━
 - ความยาว ${postLen} ตัวอักษร (±5%) ภาษาไทย
 - อิโมจิ ${emojiPct}% ของความยาว = ประมาณ ${emojiCount} ตัว กระจายทั่วโพสต์ ไม่กองรวมกัน
 - โทน: ${tone}
 - โครงสร้าง: Hook เปิด → สรุปประเด็นหลักเป็นข้อ → วิธีนำไปใช้จริง → ${cta}
+${isTopic?`- เนื้อหาต้องถูกต้อง ตรวจสอบได้ ไม่แต่งข้อมูล ถ้าอ้างตัวเลข/งานวิจัย ให้บอกแหล่ง
 - ท้ายโพสต์ต้องมี Credit:
+  📚 อ้างอิง: ${topicRefs}${guru?'\n  👤 แนวคิดโดย: '+guru:''}`
+:`- ท้ายโพสต์ต้องมี Credit:
   🎥 ที่มา: "${vtitle}" โดย ${guru}
   📌 ช่อง: ${channel}
-  🔗 ${yt}
+  🔗 ${yt}`}
 - Hashtag: ${tagCount} อัน วางบรรทัดสุดท้ายหลัง Credit${tagFixed?` ต้องมี ${tagFixed} เสมอ ที่เหลือคิดจากเนื้อหาคลิป`:' คิดจากเนื้อหาคลิป'} (ภาษาไทยหรืออังกฤษที่คนค้นหาจริง ไม่ซ้ำกัน ไม่นับรวมในความยาวโพสต์)
 - นับจำนวนตัวอักษรและอิโมจิให้ดูท้ายโพสต์
 
@@ -433,59 +502,55 @@ const prompt=`สวัสดีค่ะ ช่อง "พี่ปุ๋ยอ
 🗂️ ส่วนที่ 2: วางแผน Infographic เพื่อการเรียนรู้ 10 ภาพ (1:1 • 1080×1080)
 ━━━━━━━━━━━━━━━━━━━━━━
 ทำเป็นตาราง: ลำดับ | หัวข้อบนภาพ | เนื้อหาหลัก (ไม่เกิน 40 คำ) | ไอเดียภาพ/ไอคอน
-ประเภท VDO: ${templates[tpl].name}
+ประเภท${isTopic?'เนื้อหา':' VDO'}: ${templates[tpl].name}
 ${tpl==='ai'
-? 'ภาพ 2-9: ให้เธอดูคลิปแล้วเสนอโครง 8 ภาพที่เหมาะกับเนื้อหาจริง (เช่น ปัญหา/ประเด็น/วิธีทำ/Quote/บทเรียน/สรุป) แล้วรอพี่ยืนยันก่อน'
-: 'ลำดับที่พี่จัดไว้ (ปรับข้อความให้ตรงกับเนื้อหาจริงในคลิปได้ แต่ภาพ 1 และภาพ 10 ห้ามเปลี่ยนหน้าที่):'}
+? 'ภาพ 2-9: ให้เธอ'+(isTopic?'ค้นคว้าเรื่องนี้':'ดูคลิป')+'แล้วเสนอโครง 8 ภาพที่เหมาะกับเนื้อหาจริง (เช่น ปัญหา/ประเด็น/วิธีทำ/Quote/บทเรียน/สรุป) แล้วรอพี่ยืนยันก่อน'
+: 'ลำดับที่พี่จัดไว้ (ปรับข้อความให้ตรงกับเนื้อหาจริงได้ แต่ภาพ 1 และภาพ 10 คงหน้าที่เดิม):'}
 ${slideList}
-กติกา: ข้อที่มี "(ถ้ามี)" ถ้าในคลิปไม่มีเนื้อหาส่วนนั้น ให้แทนด้วยประเด็นอื่นที่สำคัญจากคลิป — ต้องครบ 10 ภาพเสมอ ห้ามมีภาพว่างหรือภาพยัดเนื้อหาที่ไม่มีในคลิป
+กติกา: ข้อที่มี "(ถ้ามี)" ถ้า${isTopic?'เนื้อหา':'คลิป'}ไม่มีส่วนนั้น ให้แทนด้วยประเด็นสำคัญอื่น — ต้องครบ 10 ภาพเสมอ
 
 ━━━━━━━━━━━━━━━━━━━━━━
 🎨 ส่วนที่ 3: สร้างภาพ 10 ภาพ
 ━━━━━━━━━━━━━━━━━━━━━━
-- ขนาด 1:1 (1080×1080) ทั้ง 10 ภาพ ขอบมน 20px
-- ภาพ 1: ต้องมี "รูปเจ้าของ VDO" เป็นจุดเด่น + ชื่อเรื่อง + ชื่อเจ้าของ VDO + ชื่อช่อง
-- ภาพ 10: ประวัติเจ้าของ VDO (รูปเล็ก + ประวัติ 4-5 บรรทัด + ชื่อช่อง) ใช้ชื่อจริงของเจ้าของ VDO เท่านั้น **ห้ามมีคำว่า "Guru" บนภาพ**
-- ภาพ 2-9: เนื้อหาตามแผนในส่วนที่ 2 อ่านง่าย ตัวอักษรใหญ่ ไม่แน่นเกินไป
-- **ห้ามใส่ลิงก์/URL ในภาพทุกภาพ** (ลิงก์อยู่ใน Credit ท้ายโพสต์เท่านั้น)
+- ขนาด 1:1 (1080×1080) ทั้ง 10 ภาพ ภาษาไทย สะกดถูก
+${isTopic?`- ภาพ 1: ปกหัวข้อ "${vtitle}" ตัวใหญ่เด่น + ชื่อช่อง พี่ปุ๋ยอยากรู้${guru?' + รูป '+guru+' (ถ้าแนบมา)':' + ภาพประกอบสื่อความหมายของเรื่อง (ไม่ต้องมีคนจริง)'}
+- ภาพ 2-9: เนื้อหาตามแผนส่วนที่ 2 ข้อความสั้น ตัวอักษรใหญ่ อ่านง่ายบนมือถือ
+- ภาพ 10: Key Takeaways 3 ข้อ + ชื่อแหล่งอ้างอิง${guru?' + รูปเล็กและประวัติสั้น '+guru:''} (ไม่มีลิงก์)`
+:`- ภาพ 1: รูปเจ้าของ VDO เป็นจุดเด่น + ชื่อเรื่อง + ชื่อเจ้าของ VDO + ชื่อช่อง
+- ภาพ 2-9: เนื้อหาตามแผนส่วนที่ 2 ข้อความสั้น ตัวอักษรใหญ่ อ่านง่ายบนมือถือ
+- ภาพ 10: รูปเจ้าของ VDO ขนาดเล็ก + ประวัติ 4-5 บรรทัด + ชื่อช่อง (ใช้ชื่อจริง ไม่มีคำว่า Guru ไม่มีลิงก์)`}
 ${colorBlock}
-- Layout: อิงโครงสร้างจากตัวอย่าง Infographic ที่แนบ (ตำแหน่งหัวข้อ ระยะห่าง ลำดับสายตา) แต่ยกระดับให้พรีเมียมตาม Art Direction ด้านล่าง และสีเป็นไปตามชุดสีด้านบน
 
-✦ Art Direction — ทุกภาพต้องดู "แพง มืออาชีพ ระดับแบรนด์" ไม่ใช่ infographic ทั่วไป
+✦ สไตล์ภาพ (ใช้เป็นหลัก — ถ้าขัดกับตัวอย่างที่แนบ ให้ยึดสไตล์นี้ ตัวอย่างใช้ดูแค่การจัดวางหัวข้อ/เนื้อหา)
 - ${styles[styleSel].prompt}
-- ลำดับชั้นข้อความ 3 ระดับชัดเจน: หัวข้อ (ใหญ่ หนา 1 บรรทัด) → หัวข้อรอง → เนื้อหา ไม่เกิน 40 คำ/ภาพ
-- ระยะขอบ (margin) อย่างน้อย 80px ทุกด้าน ข้อความห้ามชิดขอบหรือล้นภาพ
-- ฟอนต์ไทยสมัยใหม่อ่านง่าย (แนว Sarabun / Prompt / IBM Plex Thai) ใช้ไม่เกิน 2 ตระกูล ห้ามฟอนต์การ์ตูน ห้ามตัวเอียง ห้ามใส่เงา/ขอบตัวอักษร
-- ไอคอน/ภาพประกอบ: สไตล์เดียวน้ำหนักเดียวทั้งชุด (line icon หรือ flat ทึบ เลือกอย่างเดียว) ห้าม clipart ห้ามปน 3D กับ flat ห้ามอิโมจิบนภาพ
-- สีเน้น (Accent) ใช้แค่ 1-2 จุดต่อภาพ ที่เหลือใช้โทนกลางให้ตาพัก ห้ามสีนีออน/สีสดจัด
-- พื้นหลัง: เรียบหรือ texture ละเอียดมาก (กระดาษ/ผ้าลินิน opacity ต่ำ) ห้ามลวดลายรก ห้าม stock pattern
-- รูปเจ้าของ VDO (ภาพ 1 และ 10): ตัดพื้นหลังหรือปรับโทนให้กลมกลืนกับชุดสี มีแสงนุ่ม (soft light) รอบตัว ดูสง่า ไม่ใช่ภาพจับหน้าจอ
-- ความสม่ำเสมอ: ทำภาพ 1 เป็น master template แล้วภาพ 2-10 ใช้ template เดียวกันเป๊ะ (ตำแหน่งหัวข้อ เลขภาพ โลโก้ ฟอนต์ ขนาด)
-- ส่งทีละภาพตามลำดับ 1→10 พร้อมระบุเลขภาพ
+- ลำดับข้อความ: หัวข้อใหญ่ 1 บรรทัด → เนื้อหาไม่เกิน 40 คำ เว้นขอบรอบภาพให้โล่ง ข้อความไม่ชิดขอบ
+- สีเน้นใช้แค่ 1-2 จุดต่อภาพ ส่วนที่เหลือใช้โทนกลางของชุดสี
+- ไอคอน/ภาพประกอบใช้สไตล์เดียวกันทั้งชุด${(!isTopic||guru)?' รูปคนปรับโทนให้กลมกลืนกับชุดสี มีแสงนุ่ม':''}
+- ทำภาพ 1 ก่อน ให้พี่ดูเป็นต้นแบบ แล้วภาพ 2-10 ใช้การจัดวาง ฟอนต์ ตำแหน่งโลโก้เดียวกัน
+- หลีกเลี่ยง: สีสดจัด/นีออน, ลวดลายพื้นหลังรก, clipart, อิโมจิบนภาพ, ข้อความล้นขอบ
+- ส่งทีละภาพตามลำดับ 1→10 ระบุเลขภาพ
 
 ━━━━━━━━━━━━━━━━━━━━━━
 🏷️ ส่วนที่ 4: โลโก้ "พี่ปุ๋ยอยากรู้" (บังคับทุกภาพ)
 ━━━━━━━━━━━━━━━━━━━━━━
-- ใช้ไฟล์โลโก้ที่แนบ (${LOGO_DESC}) ห้ามวาดใหม่ ห้ามเปลี่ยนสี ห้ามบิดสัดส่วน คงรูปวงกลมไว้
-- ตำแหน่ง: มุม${lc.pos} เว้นขอบ 30-40px
-- ขนาด: เล็ก ประมาณ ${lc.size}% ของความกว้างภาพ
-- ความจาง: ทำให้จาง/เบลอ ${lc.fade}% (ความทึบ ${lc.opacity}%) ให้เห็นแต่ไม่แย่งความสนใจ
-- ต้องอยู่ตำแหน่งและขนาดเดียวกันทั้ง 10 ภาพ
+- วางไฟล์โลโก้ที่แนบ (${LOGO_DESC}) ตามต้นฉบับ คงรูปวงกลมและสีเดิม
+- ตำแหน่งมุม${lc.pos} ขนาดเล็กประมาณ ${lc.size}% ของความกว้างภาพ ความทึบ ${lc.opacity}% (จางลง ${lc.fade}%)
+- ตำแหน่งและขนาดเดียวกันทุกภาพ
 
 ━━━━━━━━━━━━━━━━━━━━━━
 ✅ ส่วนที่ 5: ตรวจงานก่อนส่ง
 ━━━━━━━━━━━━━━━━━━━━━━
 - สะกดไทยถูก 100%: ใช้ (ไม่ใช่ ใซ้) / ชีวิต (ไม่ใช่ ซีวิต) / เช้า (ไม่ใช่ เซ้า) / ชาเลนจ์ (ไม่ใช่ ซาเลนซ์)
-- ภาพ 1 มีรูปเจ้าของ VDO ✔ / ภาพ 10 มีประวัติเจ้าของ VDO (ไม่มีคำว่า Guru) ✔ / ไม่มีลิงก์ในภาพใดเลย ✔ / โลโก้ครบ 10 ภาพ ✔ / โทนสีเดียวกันทั้งชุด ✔ / ดูพรีเมียมตาม Art Direction (ไม่ชิดขอบ ไม่มีสีสดจัด ไม่มี clipart) ✔
+${isTopic?'- ภาพ 1 ปกหัวข้อชัด ✔ / ภาพ 10 Key Takeaways + อ้างอิง (ไม่มีลิงก์) ✔':'- ภาพ 1 มีรูปเจ้าของ VDO ✔ / ภาพ 10 มีประวัติ (ไม่มีคำว่า Guru ไม่มีลิงก์) ✔'} / โลโก้ครบ 10 ภาพ ✔ / ชุดสีและสไตล์เดียวกันทั้งชุด ✔
 - สรุปปิดท้าย: ชุดสีที่ใช้ (Hex) + จำนวนตัวอักษรโพสต์ + จำนวนอิโมจิ + จำนวน Hashtag
 
 เริ่มจากส่วนที่ 1 และ 2 ก่อนนะคะ แล้วรอพี่ยืนยันก่อนสร้างภาพค่ะ
 `;
 document.getElementById('promptBox').value=prompt;
-document.getElementById('previewGuru').innerText='โดย '+guru+' • '+channel;
+document.getElementById('previewGuru').innerText=isTopic?(guru?'แนวคิดโดย '+guru+' • พี่ปุ๋ยอยากรู้':'พี่ปุ๋ยอยากรู้'):'โดย '+guru+' • '+channel;
 document.getElementById('previewTitle').innerText=vtitle.startsWith('(')?'สรุปจาก VDO':vtitle;
-document.getElementById('ck-yt').innerText=(v('yt')?'☑':'☐')+' ใส่ลิงก์ YouTube';
-document.getElementById('ck-guru').innerText=(v('guru')?'☑':'☐')+' ใส่ชื่อ Guru';
+document.getElementById('ck-yt').innerText=isTopic?((v('topicTitle')?'☑':'☐')+' ใส่หัวข้อเรื่อง'):((v('yt')?'☑':'☐')+' ใส่ลิงก์ YouTube');
+document.getElementById('ck-guru').innerText=isTopic?((v('topicBody')||v('topicRefs')?'☑':'☐')+' วางเนื้อหา/อ้างอิง (หรือให้ AI ค้น)'):((v('guru')?'☑':'☐')+' ใส่ชื่อ Guru');
 }
 
 // ===== COPY / DOWNLOAD =====
@@ -513,7 +578,7 @@ URL.revokeObjectURL(url);
 }
 
 // ===== EVENTS =====
-['yt','guru','channel','vtitle','points','bio','postLen','emojiPct','tone','cta','tagCount','tagFixed','logoPos'].forEach(id=>{
+['yt','guru','channel','vtitle','points','bio','topicTitle','topicOwner','topicBody','topicRefs','postLen','emojiPct','tone','cta','tagCount','tagFixed','logoPos'].forEach(id=>{
 document.getElementById(id).addEventListener('input', updatePrompt);
 document.getElementById(id).addEventListener('change', updatePrompt);
 });
@@ -534,7 +599,7 @@ renderSlides(); updatePrompt();
 document.getElementById('styleSel').innerHTML=Object.entries(styles).map(([k,t])=>`<option value="${k}">${t.name}</option>`).join('');
 document.getElementById('tplSel').innerHTML=Object.entries(templates).map(([k,t])=>`<option value="${k}">${t.name}</option>`).join('');
 renderColors();
-renderSlides();
+setSource('yt');
 selectStyle('editorial');
 </script>
 </body>
