@@ -104,7 +104,14 @@ body{font-family:'Sarabun',sans-serif}
 <div class="bg-white rounded-3xl p-5 shadow-sm mb-4">
 <h2 class="font-bold mb-1" style="color:#5D1A2D">3️⃣ โทนสี Infographic (ภาพ 1-10 ต้องโทนเดียวกันทั้งชุด)</h2>
 <p class="text-xs opacity-50 mb-3">สีต่างจากตัวอย่างที่แนบได้ แต่ Layout/สไตล์ต้องอิงตัวอย่าง — เลือกจากชุดสีด้านล่าง หรือให้ AI เลือกเอง</p>
-<div id="grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3"></div>
+<div id="grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3"></div>
+<div class="mt-4 grid md:grid-cols-3 gap-3 items-end">
+<div>
+<label class="text-xs font-bold" style="color:#5D1A2D">✦ สไตล์ภาพ (Art Direction พรีเมียม)</label>
+<select id="styleSel" onchange="selectStyle(this.value)" class="w-full mt-1 px-4 py-2 rounded-2xl border-2 bg-white text-sm font-bold" style="border-color:#5D1A2D;color:#5D1A2D"></select>
+</div>
+<p id="styleDesc" class="md:col-span-2 text-xs opacity-60 pb-2"></p>
+</div>
 </div>
 
 <!-- STEP 4: LOGO -->
@@ -199,12 +206,23 @@ const LOGO_DESC="โลโก้วงกลม ขอบพู่กันส�
 const palettes=[
 {id:'ai',name:'🤖 ให้ AI เลือกเอง',bg:'#F4F4F4',accent:'#888888',text:'#333333',border:'#888888',desc:'ต่างจากตัวอย่างได้ แต่ 10 ภาพโทนเดียวกัน'},
 {id:'original',name:'พี่ปุ๋ยออริจินัล',bg:'#FFF5F6',accent:'#5D1A2D',text:'#FFF8F0',border:'#5D1A2D',desc:'Soft Pink + Burgundy'},
-{id:'akash',name:'Akash จักรวาล',bg:'#EDE7F6',accent:'#4A148C',text:'#FFD700',border:'#FFD700',desc:'Lavender + Gold'},
-{id:'sunrise',name:'Sunrise',bg:'#FFF8E1',accent:'#FF8F00',text:'#5D4037',border:'#5D4037',desc:'Gold + Amber'},
-{id:'nature',name:'5 ธาตุ',bg:'#E8F5E9',accent:'#2E7D32',text:'#795548',border:'#2E7D32',desc:'Green + Earth'},
-{id:'minimal',name:'มินิมอล',bg:'#FFFFFF',accent:'#37474F',text:'#90A4AE',border:'#90A4AE',desc:'White + Gray'},
+{id:'burgundygold',name:'Burgundy + Gold',bg:'#FBF6F3',accent:'#5D1A2D',text:'#C9A050',border:'#C9A050',desc:'ครีมอุ่น + เบอร์กันดี + ทองด้าน'},
+{id:'midnight',name:'Midnight Navy',bg:'#0F1A2B',accent:'#C9A050',text:'#F4F1EA',border:'#C9A050',desc:'น้ำเงินเข้ม + ทอง (โทนมืดหรู)'},
+{id:'champagne',name:'Champagne',bg:'#F5EFE6',accent:'#3D3A37',text:'#B08D57',border:'#B08D57',desc:'แชมเปญ + ถ่านอุ่น + ทองอ่อน'},
+{id:'sage',name:'Sage + Cream',bg:'#F3F4EE',accent:'#4A5D4F',text:'#8C7A5B',border:'#4A5D4F',desc:'เขียวเซจ + ครีม + น้ำตาลอ่อน'},
+{id:'charcoal',name:'Charcoal + Copper',bg:'#F7F6F4',accent:'#2B2B2B',text:'#B87333',border:'#B87333',desc:'ถ่านดำ + ทองแดง (มินิมอลหรู)'},
 ];
 let sel=palettes[1];
+
+// ===== สไตล์ภาพพรีเมียม (Art Direction) =====
+const styles={
+editorial:{name:'✦ Luxury Editorial (ค่าเริ่มต้น)',desc:'นิตยสารหรู — หัวข้อ Serif ใหญ่ + เนื้อหา Sans บาง เส้นทองบาง พื้นที่ว่างเยอะ',prompt:'สไตล์นิตยสารหรู (Luxury Editorial): หัวข้อใช้ฟอนต์ Serif สมัยใหม่ตัวใหญ่ เนื้อหาใช้ Sans ตัวบาง มีเส้นขีดคั่นบางสีทองด้าน (1px) พื้นที่ว่าง 25-30% ของภาพ เลขลำดับใหญ่จางเป็น element ตกแต่ง'},
+minimal:{name:'✦ Premium Minimal',desc:'ขาวสะอาด ไม่มีลวดลาย ใช้ typography และ spacing เล่าเรื่อง',prompt:'สไตล์มินิมอลพรีเมียม: พื้นเรียบไม่มีลวดลาย องค์ประกอบน้อยแต่วางแม่นยำบน grid 12 คอลัมน์ ฟอนต์ Sans เรขาคณิต 2 น้ำหนัก (Light / Bold) ไอคอนเส้นบาง 1.5px น้ำหนักเดียวทั้งชุด ไม่มีเงา ไม่มี gradient'},
+darklux:{name:'✦ Dark Luxe',desc:'พื้นเข้ม ทองด้าน แสงนุ่ม ดูแพงแบบแบรนด์เครื่องประดับ (เหมาะกับชุดสี Midnight Navy)',prompt:'สไตล์ Dark Luxe: พื้นหลังโทนเข้มมี gradient นุ่มมาก (vignette เบาๆ) ตัวอักษรสีครีม/ทองด้าน มี glow บางๆ รอบรูปคน เส้นและกรอบทองเมทัลลิกด้าน ไม่เงาสะท้อน ไม่ vivid'},
+corporate:{name:'✦ Modern Corporate',desc:'สะอาด เชื่อถือได้ แบบบริษัทที่ปรึกษาระดับโลก',prompt:'สไตล์ Modern Corporate: การ์ดขอบมนซ้อนบนพื้น ใช้ soft shadow (blur 40px opacity 8%) จัดข้อมูลเป็นบล็อกชัดเจน หัวข้อ Bold เนื้อหา Regular สีเน้นใช้แค่จุดเดียวต่อภาพ ไอคอน line-style น้ำหนักเดียว'},
+};
+let styleSel='editorial';
+function selectStyle(k){styleSel=k;document.getElementById('styleDesc').innerText=styles[k].desc;updatePrompt();}
 
 // ===== 2. SLIDES (fixed 10) — ภาพ 1 และ 10 ล็อก / ภาพ 2-9 มาจากแม่แบบตามประเภท VDO =====
 const SLIDE_FIRST={id:1, type:'ปก + รูปเจ้าของ VDO', title:'ชื่อเรื่องหลักจาก VDO (สั้น ทรงพลัง)', locked:true, note:'ต้องมีรูปเจ้าของ VDO เด่นชัด + ชื่อเจ้าของ VDO + ชื่อช่อง'};
@@ -431,8 +449,18 @@ ${slideList}
 - ภาพ 2-9: เนื้อหาตามแผนในส่วนที่ 2 อ่านง่าย ตัวอักษรใหญ่ ไม่แน่นเกินไป
 - **ห้ามใส่ลิงก์/URL ในภาพทุกภาพ** (ลิงก์อยู่ใน Credit ท้ายโพสต์เท่านั้น)
 ${colorBlock}
-- Layout/สไตล์: อิงจากตัวอย่าง Infographic ที่แนบ (โครงสร้าง ระยะห่าง ฟอนต์หนา-บาง) แต่สีเป็นไปตามชุดสีด้านบน
-- ทั้ง 10 ภาพต้องดูเป็นชุดเดียวกัน: ฟอนต์เดียวกัน สไตล์ไอคอนเดียวกัน ตำแหน่งหัวข้อเดียวกัน
+- Layout: อิงโครงสร้างจากตัวอย่าง Infographic ที่แนบ (ตำแหน่งหัวข้อ ระยะห่าง ลำดับสายตา) แต่ยกระดับให้พรีเมียมตาม Art Direction ด้านล่าง และสีเป็นไปตามชุดสีด้านบน
+
+✦ Art Direction — ทุกภาพต้องดู "แพง มืออาชีพ ระดับแบรนด์" ไม่ใช่ infographic ทั่วไป
+- ${styles[styleSel].prompt}
+- ลำดับชั้นข้อความ 3 ระดับชัดเจน: หัวข้อ (ใหญ่ หนา 1 บรรทัด) → หัวข้อรอง → เนื้อหา ไม่เกิน 40 คำ/ภาพ
+- ระยะขอบ (margin) อย่างน้อย 80px ทุกด้าน ข้อความห้ามชิดขอบหรือล้นภาพ
+- ฟอนต์ไทยสมัยใหม่อ่านง่าย (แนว Sarabun / Prompt / IBM Plex Thai) ใช้ไม่เกิน 2 ตระกูล ห้ามฟอนต์การ์ตูน ห้ามตัวเอียง ห้ามใส่เงา/ขอบตัวอักษร
+- ไอคอน/ภาพประกอบ: สไตล์เดียวน้ำหนักเดียวทั้งชุด (line icon หรือ flat ทึบ เลือกอย่างเดียว) ห้าม clipart ห้ามปน 3D กับ flat ห้ามอิโมจิบนภาพ
+- สีเน้น (Accent) ใช้แค่ 1-2 จุดต่อภาพ ที่เหลือใช้โทนกลางให้ตาพัก ห้ามสีนีออน/สีสดจัด
+- พื้นหลัง: เรียบหรือ texture ละเอียดมาก (กระดาษ/ผ้าลินิน opacity ต่ำ) ห้ามลวดลายรก ห้าม stock pattern
+- รูปเจ้าของ VDO (ภาพ 1 และ 10): ตัดพื้นหลังหรือปรับโทนให้กลมกลืนกับชุดสี มีแสงนุ่ม (soft light) รอบตัว ดูสง่า ไม่ใช่ภาพจับหน้าจอ
+- ความสม่ำเสมอ: ทำภาพ 1 เป็น master template แล้วภาพ 2-10 ใช้ template เดียวกันเป๊ะ (ตำแหน่งหัวข้อ เลขภาพ โลโก้ ฟอนต์ ขนาด)
 - ส่งทีละภาพตามลำดับ 1→10 พร้อมระบุเลขภาพ
 
 ━━━━━━━━━━━━━━━━━━━━━━
@@ -448,7 +476,7 @@ ${colorBlock}
 ✅ ส่วนที่ 5: ตรวจงานก่อนส่ง
 ━━━━━━━━━━━━━━━━━━━━━━
 - สะกดไทยถูก 100%: ใช้ (ไม่ใช่ ใซ้) / ชีวิต (ไม่ใช่ ซีวิต) / เช้า (ไม่ใช่ เซ้า) / ชาเลนจ์ (ไม่ใช่ ซาเลนซ์)
-- ภาพ 1 มีรูปเจ้าของ VDO ✔ / ภาพ 10 มีประวัติเจ้าของ VDO (ไม่มีคำว่า Guru) ✔ / ไม่มีลิงก์ในภาพใดเลย ✔ / โลโก้ครบ 10 ภาพ ✔ / โทนสีเดียวกันทั้งชุด ✔
+- ภาพ 1 มีรูปเจ้าของ VDO ✔ / ภาพ 10 มีประวัติเจ้าของ VDO (ไม่มีคำว่า Guru) ✔ / ไม่มีลิงก์ในภาพใดเลย ✔ / โลโก้ครบ 10 ภาพ ✔ / โทนสีเดียวกันทั้งชุด ✔ / ดูพรีเมียมตาม Art Direction (ไม่ชิดขอบ ไม่มีสีสดจัด ไม่มี clipart) ✔
 - สรุปปิดท้าย: ชุดสีที่ใช้ (Hex) + จำนวนตัวอักษรโพสต์ + จำนวนอิโมจิ + จำนวน Hashtag
 
 เริ่มจากส่วนที่ 1 และ 2 ก่อนนะคะ แล้วรอพี่ยืนยันก่อนสร้างภาพค่ะ
@@ -503,10 +531,11 @@ document.getElementById('logoDemo').style.opacity=(100-fade)/100;
 renderSlides(); updatePrompt();
 });
 
+document.getElementById('styleSel').innerHTML=Object.entries(styles).map(([k,t])=>`<option value="${k}">${t.name}</option>`).join('');
 document.getElementById('tplSel').innerHTML=Object.entries(templates).map(([k,t])=>`<option value="${k}">${t.name}</option>`).join('');
 renderColors();
 renderSlides();
-updatePrompt();
+selectStyle('editorial');
 </script>
 </body>
 </html>
