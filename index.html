@@ -140,9 +140,17 @@ body{font-family:'Sarabun',sans-serif}
 <h2 class="font-bold mb-1" style="color:#5D1A2D">3️⃣ โทนสี Infographic (ภาพ 1-10 ต้องโทนเดียวกันทั้งชุด)</h2>
 <p class="text-xs opacity-50 mb-3">สีต่างจากตัวอย่างที่แนบได้ แต่ Layout/สไตล์ต้องอิงตัวอย่าง — เลือกจากชุดสีด้านล่าง หรือให้ AI เลือกเอง</p>
 <div id="grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3"></div>
-<div class="mt-4 grid md:grid-cols-3 gap-3 items-end">
+<div class="mt-4 flex flex-wrap gap-2 items-center">
+<span class="text-xs font-bold" style="color:#5D1A2D">โหมดคำสั่งสร้างภาพ:</span>
+<div class="flex gap-1 p-1 rounded-full" style="background:#FFF5F6;border:1px solid #5D1A2D33">
+<button id="pm-classic" onclick="setPromptMode('classic')" class="text-xs px-4 py-1.5 rounded-full font-bold">🟢 แบบเดิม (ใช้ได้ดี)</button>
+<button id="pm-premium" onclick="setPromptMode('premium')" class="text-xs px-4 py-1.5 rounded-full font-bold">✦ พรีเมียม (ทดลอง)</button>
+</div>
+<span class="text-[10px] opacity-50">แบบเดิม = คำสั่งสั้น อิงตัวอย่างที่แนบ • พรีเมียม = เพิ่ม Art Direction (ถ้า AI ทำภาพยาก ให้กลับมาใช้แบบเดิม)</span>
+</div>
+<div id="styleWrap" class="mt-3 grid md:grid-cols-3 gap-3 items-end">
 <div>
-<label class="text-xs font-bold" style="color:#5D1A2D">✦ สไตล์ภาพ (Art Direction พรีเมียม)</label>
+<label class="text-xs font-bold" style="color:#5D1A2D">✦ สไตล์ภาพ (ใช้เฉพาะโหมดพรีเมียม)</label>
 <select id="styleSel" onchange="selectStyle(this.value)" class="w-full mt-1 px-4 py-2 rounded-2xl border-2 bg-white text-sm font-bold" style="border-color:#5D1A2D;color:#5D1A2D"></select>
 </div>
 <p id="styleDesc" class="md:col-span-2 text-xs opacity-60 pb-2"></p>
@@ -241,6 +249,10 @@ const LOGO_DESC="โลโก้วงกลม ขอบพู่กันส�
 const palettes=[
 {id:'ai',name:'🤖 ให้ AI เลือกเอง',bg:'#F4F4F4',accent:'#888888',text:'#333333',border:'#888888',desc:'ต่างจากตัวอย่างได้ แต่ 10 ภาพโทนเดียวกัน'},
 {id:'original',name:'พี่ปุ๋ยออริจินัล',bg:'#FFF5F6',accent:'#5D1A2D',text:'#FFF8F0',border:'#5D1A2D',desc:'Soft Pink + Burgundy'},
+{id:'akash',name:'Akash จักรวาล',bg:'#EDE7F6',accent:'#4A148C',text:'#FFD700',border:'#FFD700',desc:'Lavender + Gold'},
+{id:'sunrise',name:'Sunrise',bg:'#FFF8E1',accent:'#FF8F00',text:'#5D4037',border:'#5D4037',desc:'Gold + Amber'},
+{id:'nature',name:'5 ธาตุ',bg:'#E8F5E9',accent:'#2E7D32',text:'#795548',border:'#2E7D32',desc:'Green + Earth'},
+{id:'minimal',name:'มินิมอล',bg:'#FFFFFF',accent:'#37474F',text:'#90A4AE',border:'#90A4AE',desc:'White + Gray'},
 {id:'burgundygold',name:'Burgundy + Gold',bg:'#FBF6F3',accent:'#5D1A2D',text:'#C9A050',border:'#C9A050',desc:'ครีมอุ่น + เบอร์กันดี + ทองด้าน'},
 {id:'midnight',name:'Midnight Navy',bg:'#0F1A2B',accent:'#C9A050',text:'#F4F1EA',border:'#C9A050',desc:'น้ำเงินเข้ม + ทอง (โทนมืดหรู)'},
 {id:'champagne',name:'Champagne',bg:'#F5EFE6',accent:'#3D3A37',text:'#B08D57',border:'#B08D57',desc:'แชมเปญ + ถ่านอุ่น + ทองอ่อน'},
@@ -271,6 +283,14 @@ corporate:{name:'✦ Modern Corporate',desc:'สะอาด เชื่อถ�
 prompt:'Modern Corporate: การ์ดขอบมนสีขาววางบนพื้นสีอ่อน มีเงานุ่มจางๆ ใต้การ์ด ฟอนต์ Sans ไทยสมัยใหม่ หัวข้อหนา เนื้อหาปกติ ไอคอนเส้นเดียวสไตล์เดียวกัน จัดข้อมูลเป็นบล็อกชัดเจน'},
 };
 let styleSel='editorial';
+let promptMode='classic'; // 'classic' = แบบเดิมที่ใช้ได้ดี | 'premium' = Art Direction
+function setPromptMode(m){
+promptMode=m;
+['classic','premium'].forEach(k=>{const b=document.getElementById('pm-'+k);const on=k===m;b.style.background=on?'#5D1A2D':'transparent';b.style.color=on?'#fff':'#5D1A2D';});
+document.getElementById('styleWrap').style.opacity=m==='premium'?'1':'.35';
+document.getElementById('styleSel').disabled=m!=='premium';
+updatePrompt();
+}
 function selectStyle(k){styleSel=k;document.getElementById('styleDesc').innerText=styles[k].desc;updatePrompt();}
 
 // ===== 2. SLIDES (fixed 10) — ภาพ 1 และ 10 ล็อก / ภาพ 2-9 มาจากแม่แบบตามประเภท VDO =====
@@ -512,15 +532,20 @@ ${slideList}
 ━━━━━━━━━━━━━━━━━━━━━━
 🎨 ส่วนที่ 3: สร้างภาพ 10 ภาพ
 ━━━━━━━━━━━━━━━━━━━━━━
-- ขนาด 1:1 (1080×1080) ทั้ง 10 ภาพ ภาษาไทย สะกดถูก
+- ขนาด 1:1 (1080×1080) ทั้ง 10 ภาพ${promptMode==='classic'?' ขอบมน 20px':' ภาษาไทย สะกดถูก'}
 ${isTopic?`- ภาพ 1: ปกหัวข้อ "${vtitle}" ตัวใหญ่เด่น + ชื่อช่อง พี่ปุ๋ยอยากรู้${guru?' + รูป '+guru+' (ถ้าแนบมา)':' + ภาพประกอบสื่อความหมายของเรื่อง (ไม่ต้องมีคนจริง)'}
 - ภาพ 2-9: เนื้อหาตามแผนส่วนที่ 2 ข้อความสั้น ตัวอักษรใหญ่ อ่านง่ายบนมือถือ
 - ภาพ 10: Key Takeaways 3 ข้อ + ชื่อแหล่งอ้างอิง${guru?' + รูปเล็กและประวัติสั้น '+guru:''} (ไม่มีลิงก์)`
 :`- ภาพ 1: รูปเจ้าของ VDO เป็นจุดเด่น + ชื่อเรื่อง + ชื่อเจ้าของ VDO + ชื่อช่อง
 - ภาพ 2-9: เนื้อหาตามแผนส่วนที่ 2 ข้อความสั้น ตัวอักษรใหญ่ อ่านง่ายบนมือถือ
 - ภาพ 10: รูปเจ้าของ VDO ขนาดเล็ก + ประวัติ 4-5 บรรทัด + ชื่อช่อง (ใช้ชื่อจริง ไม่มีคำว่า Guru ไม่มีลิงก์)`}
+- ห้ามใส่ลิงก์/URL ในภาพทุกภาพ (ลิงก์อยู่ใน Credit ท้ายโพสต์เท่านั้น)
 ${colorBlock}
-
+${promptMode==='classic'
+? `- Layout/สไตล์: อิงจากตัวอย่าง Infographic ที่แนบ (โครงสร้าง ระยะห่าง ฟอนต์หนา-บาง) แต่สีเป็นไปตามชุดสีด้านบน
+- ทั้ง 10 ภาพต้องดูเป็นชุดเดียวกัน: ฟอนต์เดียวกัน สไตล์ไอคอนเดียวกัน ตำแหน่งหัวข้อเดียวกัน
+- ส่งทีละภาพตามลำดับ 1→10 พร้อมระบุเลขภาพ`
+: `
 ✦ สไตล์ภาพ (ใช้เป็นหลัก — ถ้าขัดกับตัวอย่างที่แนบ ให้ยึดสไตล์นี้ ตัวอย่างใช้ดูแค่การจัดวางหัวข้อ/เนื้อหา)
 - ${styles[styleSel].prompt}
 - ลำดับข้อความ: หัวข้อใหญ่ 1 บรรทัด → เนื้อหาไม่เกิน 40 คำ เว้นขอบรอบภาพให้โล่ง ข้อความไม่ชิดขอบ
@@ -528,14 +553,16 @@ ${colorBlock}
 - ไอคอน/ภาพประกอบใช้สไตล์เดียวกันทั้งชุด${(!isTopic||guru)?' รูปคนปรับโทนให้กลมกลืนกับชุดสี มีแสงนุ่ม':''}
 - ทำภาพ 1 ก่อน ให้พี่ดูเป็นต้นแบบ แล้วภาพ 2-10 ใช้การจัดวาง ฟอนต์ ตำแหน่งโลโก้เดียวกัน
 - หลีกเลี่ยง: สีสดจัด/นีออน, ลวดลายพื้นหลังรก, clipart, อิโมจิบนภาพ, ข้อความล้นขอบ
-- ส่งทีละภาพตามลำดับ 1→10 ระบุเลขภาพ
+- ส่งทีละภาพตามลำดับ 1→10 ระบุเลขภาพ`}
 
 ━━━━━━━━━━━━━━━━━━━━━━
 🏷️ ส่วนที่ 4: โลโก้ "พี่ปุ๋ยอยากรู้" (บังคับทุกภาพ)
 ━━━━━━━━━━━━━━━━━━━━━━
-- วางไฟล์โลโก้ที่แนบ (${LOGO_DESC}) ตามต้นฉบับ คงรูปวงกลมและสีเดิม
-- ตำแหน่งมุม${lc.pos} ขนาดเล็กประมาณ ${lc.size}% ของความกว้างภาพ ความทึบ ${lc.opacity}% (จางลง ${lc.fade}%)
-- ตำแหน่งและขนาดเดียวกันทุกภาพ
+- ใช้ไฟล์โลโก้ที่แนบ (${LOGO_DESC}) ห้ามวาดใหม่ ห้ามเปลี่ยนสี ห้ามบิดสัดส่วน คงรูปวงกลมไว้
+- ตำแหน่ง: มุม${lc.pos} เว้นขอบ 30-40px
+- ขนาด: เล็ก ประมาณ ${lc.size}% ของความกว้างภาพ
+- ความจาง: ทำให้จาง/เบลอ ${lc.fade}% (ความทึบ ${lc.opacity}%) ให้เห็นแต่ไม่แย่งความสนใจ
+- ต้องอยู่ตำแหน่งและขนาดเดียวกันทั้ง 10 ภาพ
 
 ━━━━━━━━━━━━━━━━━━━━━━
 ✅ ส่วนที่ 5: ตรวจงานก่อนส่ง
@@ -601,6 +628,7 @@ document.getElementById('tplSel').innerHTML=Object.entries(templates).map(([k,t]
 renderColors();
 setSource('yt');
 selectStyle('editorial');
+setPromptMode('classic');
 </script>
 </body>
 </html>
