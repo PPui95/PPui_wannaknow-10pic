@@ -194,6 +194,11 @@ body{font-family:'Sarabun',sans-serif}
 <div class="flex flex-wrap gap-2 justify-between items-center mb-3">
 <h2 class="font-bold" style="color:#5D1A2D">5️⃣ แผน 10 ภาพ (1:1 • 1080×1080)</h2>
 <div class="flex flex-wrap gap-2 items-center">
+<label class="text-xs font-bold" style="color:#5D1A2D">แนวปก:</label>
+<select id="coverSel" onchange="setCoverStyle(this.value)" class="text-xs px-3 py-2 rounded-full border-2 bg-white font-bold" style="border-color:#5D1A2D;color:#5D1A2D">
+<option value="watercolor">🎨 การ์ดสีน้ำ (สไตล์ช่อง 1:1)</option>
+<option value="viral">📱 ปกไวรัล (พาดหัว Hook + รูปตัดพื้น)</option>
+</select>
 <label class="text-xs font-bold" style="color:#5D1A2D">ประเภท VDO:</label>
 <select id="tplSel" onchange="selectTemplate(this.value)" class="text-xs px-3 py-2 rounded-full border-2 bg-white font-bold" style="border-color:#5D1A2D;color:#5D1A2D"></select>
 <button onclick="fillFromPoints()" class="text-xs px-4 py-2 rounded-full font-bold border-2" style="border-color:#5D1A2D;color:#5D1A2D">✨ เติมจากประเด็นหลัก</button>
@@ -231,7 +236,8 @@ body{font-family:'Sarabun',sans-serif}
 <li id="ck-yt">☐ ใส่ลิงก์ YouTube</li>
 <li id="ck-guru">☐ ใส่ชื่อ Guru</li>
 <li>☐ แนบโลโก้ พี่ปุ๋ยอยากรู้ (PNG พื้นใส)</li>
-<li>☐ แนบตัวอย่าง Infographic (อ้างอิง Layout)</li>
+<li>☐ แนบตัวอย่างปก <a href="cover-square.jpg" target="_blank" class="underline">cover-square.jpg</a> (การ์ดสีน้ำ) หรือ <a href="cover-reference.png" target="_blank" class="underline">cover-reference.png</a> (ปกไวรัล)</li>
+<li>☐ แนบตัวอย่างการ์ด <a href="card-square.jpg" target="_blank" class="underline">card-square.jpg</a></li>
 <li>☐ แนบรูปเจ้าของ VDO สำหรับภาพ 1 (ถ้าไม่มี AI จะขอให้แนบ)</li>
 </ul>
 </div>
@@ -283,6 +289,8 @@ corporate:{name:'✦ Modern Corporate',desc:'สะอาด เชื่อถ�
 prompt:'Modern Corporate: การ์ดขอบมนสีขาววางบนพื้นสีอ่อน มีเงานุ่มจางๆ ใต้การ์ด ฟอนต์ Sans ไทยสมัยใหม่ หัวข้อหนา เนื้อหาปกติ ไอคอนเส้นเดียวสไตล์เดียวกัน จัดข้อมูลเป็นบล็อกชัดเจน'},
 };
 let styleSel='editorial';
+let coverStyle='watercolor'; // 'watercolor' = การ์ดสีน้ำ 1:1 ของช่อง | 'viral' = ปกพาดหัว Hook + รูปตัดพื้น
+function setCoverStyle(k){coverStyle=k;updatePrompt();}
 let promptMode='classic'; // 'classic' = แบบเดิมที่ใช้ได้ดี | 'premium' = Art Direction
 function setPromptMode(m){
 promptMode=m;
@@ -495,14 +503,34 @@ const creditBlock = isTopic
 
 const cover = isTopic
 ? `ปกหัวข้อ "${vtitle}" + ชื่อช่อง${guru?` + รูป ${guru}`:' + ภาพประกอบสื่อความหมาย'}`
-: `รูป ${guru} เด่นเต็มภาพ + ชื่อเรื่อง + ชื่อช่อง`;
+: (coverStyle==='watercolor'?`ภาพ ${guru} สีน้ำในวงกลม + พาดหัว + ชื่อ + ช่อง`:`รูป ${guru} เด่นเต็มภาพ + พาดหัว Hook + ชื่อ + ช่อง`);
+const hasPerson = !isTopic || !!guru;
+const coverSpec = coverStyle==='watercolor'
+? `   สูตรปก — ทำให้เหมือน cover-square.jpg ที่แนบ (สไตล์ประจำช่อง):
+   • พื้นกระดาษครีม มี wash สีน้ำจางๆ กรอบเส้นคู่ขอบมนสีน้ำตาลเข้ม เว้นจากขอบภาพ ~5%
+   • ตกแต่ง 4 มุม: ช่อใบไม้ ประกายดาว หัวใจเล็ก สีส้มอ่อน-น้ำตาล จางๆ ไม่รก${hasPerson?`
+   • กลาง-บน: ภาพ ${guru} วาดสไตล์สีน้ำ (watercolor portrait) ครึ่งอก หน้าตรง ยิ้มอ่อน ในวงกลมเส้นสีส้ม-ทอง มี wash สีน้ำหลังวง
+     ใต้วง: เส้นขีดพู่กันสีส้ม + หัวใจเล็ก 2-3 ดวง`:`
+   • กลาง-บน: ภาพประกอบสื่อความหมายของเรื่อง วาดสไตล์สีน้ำ ชิ้นเดียวใหญ่ชัด`}
+   • ล่าง: พาดหัวไทยตัวหนาใหญ่ 1 บรรทัด สีน้ำตาลเข้ม + ขีดพู่กันสีส้มใต้พาดหัว${hasPerson?`
+     ชื่อ ${guru} ฟอนต์ Serif สีน้ำตาล → บรรทัดเล็ก "ช่อง: ${channel}"`:`
+     บรรทัดเล็ก "สรุปโดย พี่ปุ๋ยอยากรู้"`}
+   • ภาพ 2-9 ใช้กระดาษ กรอบ และของตกแต่งชุดเดียวกัน (ดู card-square.jpg): พาดหัวบน → ภาพประกอบสีน้ำกลาง → ข้อความ 2-3 บรรทัดล่าง`
+: `   สูตรปก — ทำให้เหมือน cover-reference.png ที่แนบ (ปกไวรัล):
+   • บน 40%: พาดหัวไทยตัวหนาใหญ่ 2 บรรทัด แบบ Hook ("ถ้าไม่เปลี่ยนสิ่งนี้ ชีวิตคุณจะไม่เปลี่ยน") คำสำคัญเน้นสีต่าง/ขีดเส้นใต้
+     ใต้พาดหัว: บรรทัดเล็ก "${isTopic?(guru?'แนวคิดโดย '+guru:'สรุปโดย พี่ปุ๋ยอยากรู้'):'สรุปโดย '+guru}" สีเน้น${hasPerson?`
+   • ล่าง 60%: รูป ${guru} ครึ่งตัว ตัดพื้นหลัง (die-cut) ใหญ่เต็มความกว้าง หน้าชัด แสงนุ่ม มี glow/รัศมีจางๆ หลังศีรษะ
+     ชื่อ ${guru} ตัวหนาใต้รูปหรือมุมล่าง`:`
+   • ล่าง 60%: ภาพประกอบสื่อความหมายของเรื่อง ชิ้นเดียวใหญ่ชัด ไม่รก`}
+   • พื้นหลัง: gradient นุ่มตามอารมณ์เรื่อง (อบอุ่น = ชมพู-ครีม / ความรู้-วิทย์ = เขียวมินต์-ครีม / จิตวิญญาณ = น้ำเงินเข้ม-ทอง) + ไอคอนธีมลอยจางๆ 2-3 ชิ้น
+   • ข้อความทุกตัวอ่านออกใน 1 วินาทีบนมือถือ ตัวอักษรไม่ทับหน้าคน`;
 const last = isTopic
 ? `Key Takeaways 3 ข้อ + ชื่อแหล่งอ้างอิง${guru?` + รูปเล็กและประวัติสั้น ${guru}`:''}`
 : `รูปเล็ก + ประวัติ ${guru} 4-5 บรรทัด + ชื่อช่อง`;
 
 const styleLine = promptMode==='premium'
 ? `${styles[styleSel].prompt}\n   (ตัวอย่างที่แนบใช้ดูการจัดวางเท่านั้น ถ้าขัดกันให้ยึดสไตล์นี้)`
-: 'ตามตัวอย่าง Infographic ที่แนบ (โครงสร้าง ระยะห่าง น้ำหนักฟอนต์) เปลี่ยนแค่สีตามชุดสีด้านบน';
+: 'ตามตัวอย่าง card-square.jpg ที่แนบ (กระดาษครีม กรอบเส้นคู่ขอบมน ภาพประกอบสีน้ำ ฟอนต์หนา-บาง) เปลี่ยนแค่สีตามชุดสีด้านบน';
 
 const prompt=`สวัสดีค่ะ ช่อง "พี่ปุ๋ยอยากรู้"
 ${isTopic?'เรื่องนี้':'คลิปนี้'}ขอ 2 อย่าง: โพสต์ 1 ชิ้น + Infographic 10 ภาพ
@@ -511,7 +539,7 @@ ${isTopic?'เรื่องนี้':'คลิปนี้'}ขอ 2 อย�
 ${isTopic?'📝 เนื้อหา':'📺 คลิป'}
 ${infoBlock}
 
-📎 ไฟล์แนบ: โลโก้ logo-pui.png • ตัวอย่าง Infographic${(!isTopic||guru)?` • รูป ${guru} (ถ้าไม่ได้แนบ ให้เธอหาเอง)`:''}
+📎 ไฟล์แนบ: โลโก้ logo-pui.png • ${coverStyle==='watercolor'?'ตัวอย่างปก cover-square.jpg • ตัวอย่างการ์ด card-square.jpg':'ตัวอย่างปก cover-reference.png • ตัวอย่างการ์ด card-square.jpg'}${(!isTopic||guru)?` • รูป ${guru} (ถ้าไม่ได้แนบ ให้เธอหาเอง)`:''}
 
 
 ① โพสต์ Facebook
@@ -538,7 +566,8 @@ ${slideList}
 
 ③ สร้างภาพ 10 ภาพ  (1:1 • 1080×1080)
    ภาพ 1 = ${cover}
-   ภาพ 10 = ${last}
+${coverSpec}
+   ภาพ 10 = ${last}${hasPerson?' (รูปสไตล์เดียวกับปก ย่อขนาด)':''}
    ภาพ 2-9 = ตามตารางที่ยืนยัน ข้อความสั้น ตัวใหญ่ อ่านง่ายบนมือถือ${(!isTopic||guru)?`
    รูป ${guru}: ถ้าไม่ได้แนบ ให้หาเอง (thumbnail คลิป/รูปทางการของช่อง) เลือกรูปหน้าชัด แสงดี ครอปให้พอดีกรอบ ไม่ตัดหัว/คาง ไม่มีขอบเหลือ ไม่มีลายน้ำ ตัวอักษร หรือเศษภาพติดมา`:''}
    ตรวจกรอบทุกภาพก่อนส่ง: องค์ประกอบอยู่ในกรอบครบ ไม่มีเศษภาพเกินขอบ ไม่มีข้อความตกขอบ ไม่มีจุดบกพร่อง/ตัวอักษรเพี้ยน

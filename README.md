@@ -10,6 +10,8 @@
 ไฟล์
 - `index.html` — ตัวเครื่องมือ (เปิดได้เลย ไม่ต้อง build)
 - `logo-pui.png` — โลโก้ต้นฉบับ (แนบในแชทตอนสั่งสร้างภาพ)
+- `cover-square.jpg` / `card-square.jpg` — ตัวอย่างปกและการ์ดสไตล์สีน้ำของช่อง (แนบคู่กับ Prompt)
+- `cover-reference.png` — ตัวอย่างปกไวรัล (พาดหัว Hook + รูปตัดพื้น)
 
 ## เว็บ
 - Live: https://ppui-wannaknow-10pic.netlify.app
